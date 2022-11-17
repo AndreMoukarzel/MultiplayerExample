@@ -21,7 +21,8 @@ func _ready() -> void:
 		_create_player(this_peer_id) # Creates the host's LobbyPlayer object in 'Players' node
 		# Adds host's info to global dictionary
 		PLAYERS_INFO[this_peer_id] = {
-			"name": Connection.self_data,
+			"name": Connection.self_data["name"],
+			"color": Connection.self_data["color"],
 			"ready": true
 		}
 		_update_local_info()
@@ -94,6 +95,7 @@ func _update_local_info() -> void:
 		var player_info: Dictionary = PLAYERS_INFO[peer_id]
 		
 		PlayerObj.get_node("PlayerName").text = player_info["name"]
+		PlayerObj.get_node("TextureRect").modulate = player_info["color"]
 		PlayerObj.get_node("CheckBox").button_pressed = player_info["ready"]
 	
 	_setup_server_player(%Players.get_node('1'))
@@ -109,10 +111,14 @@ func _change_to_menu() -> void:
 ########################################### RPC METHODS ###########################################
 
 @rpc(any_peer)
-func _send_info_to_server(asking_peer: int, player_name: String, ready_status: bool) -> void:
+func _send_info_to_server(asking_peer: int, player_data: Dictionary, ready_status: bool) -> void:
 	# Called in client only
 	# Updates new player's info in server and sends updated information to all connected clients
-	PLAYERS_INFO[asking_peer] = {"name": player_name, "ready": ready_status}
+	PLAYERS_INFO[asking_peer] = {
+		"name": player_data["name"],
+		"color": player_data["color"],
+		"ready": ready_status
+	}
 	_update_local_info()
 	
 	for peer_id in multiplayer.get_peers(): # Sends updated info to all clients

@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://bnfg4u7xpux4f"]
+[gd_scene load_steps=4 format=3 uid="uid://bnfg4u7xpux4f"]
 
 [ext_resource type="Script" path="res://log_in.gd" id="1_d72sq"]
 [ext_resource type="Script" path="res://IpText.gd" id="1_or702"]
+[ext_resource type="Texture2D" uid="uid://dan8wahejn7fr" path="res://icon.svg" id="3_ywlbn"]
 
 [node name="LogIn" type="HBoxContainer"]
 anchors_preset = 15
@@ -9,72 +10,49 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_constants/separation = 150
 alignment = 1
 script = ExtResource("1_d72sq")
 metadata/_edit_lock_ = true
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="Connection" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-offset_left = 446.0
-offset_right = 706.0
+offset_left = 271.0
+offset_right = 531.0
 offset_bottom = 648.0
 theme_override_constants/separation = 50
 alignment = 1
 metadata/_edit_lock_ = true
 
-[node name="PlayerName" type="VBoxContainer" parent="VBoxContainer"]
+[node name="Host" type="Button" parent="Connection"]
 layout_mode = 2
-offset_top = 147.0
+offset_top = 210.0
 offset_right = 260.0
-offset_bottom = 212.0
-
-[node name="Label" type="Label" parent="VBoxContainer/PlayerName"]
-layout_mode = 2
-offset_right = 260.0
-offset_bottom = 26.0
-text = "Player's Name"
-horizontal_alignment = 1
-
-[node name="NameText" type="TextEdit" parent="VBoxContainer/PlayerName"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-offset_top = 30.0
-offset_right = 260.0
-offset_bottom = 65.0
-placeholder_text = "Default"
-scroll_fit_content_height = true
-
-[node name="Host" type="Button" parent="VBoxContainer"]
-layout_mode = 2
-offset_top = 262.0
-offset_right = 260.0
-offset_bottom = 305.0
-theme_override_font_sizes/font_size = 25
+offset_bottom = 241.0
 text = "Host"
 
-[node name="Connect" type="VBoxContainer" parent="VBoxContainer"]
+[node name="Connect" type="VBoxContainer" parent="Connection"]
 layout_mode = 2
-offset_top = 355.0
+offset_top = 291.0
 offset_right = 260.0
-offset_bottom = 420.0
+offset_bottom = 356.0
 
-[node name="Label" type="Label" parent="VBoxContainer/Connect"]
+[node name="Label" type="Label" parent="Connection/Connect"]
 layout_mode = 2
 offset_right = 260.0
 offset_bottom = 26.0
 text = "Connect to Server"
 horizontal_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Connect"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Connection/Connect"]
 layout_mode = 2
 offset_top = 30.0
 offset_right = 260.0
 offset_bottom = 65.0
 theme_override_constants/separation = 10
 
-[node name="IpText" type="TextEdit" parent="VBoxContainer/Connect/HBoxContainer"]
+[node name="IpText" type="TextEdit" parent="Connection/Connect/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -84,21 +62,91 @@ placeholder_text = "127.0.0.1"
 scroll_fit_content_height = true
 script = ExtResource("1_or702")
 
-[node name="Enter" type="Button" parent="VBoxContainer/Connect/HBoxContainer"]
+[node name="Enter" type="Button" parent="Connection/Connect/HBoxContainer"]
 layout_mode = 2
 offset_left = 210.0
 offset_right = 260.0
 offset_bottom = 35.0
 text = "Enter"
 
-[node name="Quit" type="Button" parent="VBoxContainer"]
+[node name="Quit" type="Button" parent="Connection"]
 layout_mode = 2
-offset_top = 470.0
+offset_top = 406.0
 offset_right = 260.0
-offset_bottom = 501.0
+offset_bottom = 437.0
 text = "Quit"
 
-[connection signal="pressed" from="VBoxContainer/Host" to="." method="_on_host_pressed"]
-[connection signal="text_changed" from="VBoxContainer/Connect/HBoxContainer/IpText" to="VBoxContainer/Connect/HBoxContainer/IpText" method="_on_text_changed"]
-[connection signal="pressed" from="VBoxContainer/Connect/HBoxContainer/Enter" to="." method="_on_enter_pressed"]
-[connection signal="pressed" from="VBoxContainer/Quit" to="." method="_on_quit_pressed"]
+[node name="Customization" type="VBoxContainer" parent="."]
+layout_mode = 2
+offset_left = 681.0
+offset_right = 881.0
+offset_bottom = 648.0
+theme_override_constants/separation = 50
+alignment = 1
+metadata/_edit_lock_ = true
+
+[node name="PlayerName" type="VBoxContainer" parent="Customization"]
+layout_mode = 2
+offset_top = 187.0
+offset_right = 200.0
+offset_bottom = 252.0
+
+[node name="Label" type="Label" parent="Customization/PlayerName"]
+layout_mode = 2
+offset_right = 200.0
+offset_bottom = 26.0
+text = "Player's Name"
+horizontal_alignment = 1
+
+[node name="NameText" type="TextEdit" parent="Customization/PlayerName"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+offset_top = 30.0
+offset_right = 200.0
+offset_bottom = 65.0
+placeholder_text = "Default"
+scroll_fit_content_height = true
+
+[node name="PlayerColor" type="VBoxContainer" parent="Customization"]
+layout_mode = 2
+offset_top = 302.0
+offset_right = 200.0
+offset_bottom = 460.0
+
+[node name="Label" type="Label" parent="Customization/PlayerColor"]
+layout_mode = 2
+offset_right = 200.0
+offset_bottom = 26.0
+text = "Player Color"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Color" type="HBoxContainer" parent="Customization/PlayerColor"]
+layout_mode = 2
+offset_top = 30.0
+offset_right = 200.0
+offset_bottom = 158.0
+theme_override_constants/separation = 15
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="Customization/PlayerColor/Color"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+offset_right = 50.0
+offset_bottom = 128.0
+icon_alignment = 1
+color = Color(1, 1, 1, 1)
+
+[node name="PlayerVisual" type="TextureRect" parent="Customization/PlayerColor/Color"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 65.0
+offset_right = 193.0
+offset_bottom = 128.0
+texture = ExtResource("3_ywlbn")
+
+[connection signal="pressed" from="Connection/Host" to="." method="_on_host_pressed"]
+[connection signal="text_changed" from="Connection/Connect/HBoxContainer/IpText" to="Connection/Connect/HBoxContainer/IpText" method="_on_text_changed"]
+[connection signal="pressed" from="Connection/Connect/HBoxContainer/Enter" to="." method="_on_enter_pressed"]
+[connection signal="pressed" from="Connection/Quit" to="." method="_on_quit_pressed"]
+[connection signal="color_changed" from="Customization/PlayerColor/Color/ColorPickerButton" to="." method="_on_color_picker_button_color_changed"]
