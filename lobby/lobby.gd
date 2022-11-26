@@ -8,7 +8,7 @@
 extends VSplitContainer
 
 
-const PLAYER_SCN = preload("res://lobby_player.tscn")
+@export var PLAYER_SCN: PackedScene
 
 var PLAYERS_INFO: Dictionary = {}
 
@@ -102,10 +102,30 @@ func _update_local_info() -> void:
 
 
 func _change_to_menu() -> void:
-	# Called in client only
 	# Automatically called when 'server_disconnected' signal is detected. Returns to starting menu
 	Connection.disconnect_from_server()
 	var _val = get_tree().change_scene_to_file("res://log_in.tscn")
+
+
+func _all_ready(verbose: bool = false) -> bool:
+	for player in %Players.get_children():
+			if not player.get_node("CheckBox").button_pressed:
+				if verbose:
+					print("Player " + player.get_node("PlayerName").text + " is not ready")
+				return false
+	return true
+
+
+func _change_to_arena() -> void:
+	for peer_id in PLAYERS_INFO.keys():
+		var player_info: Dictionary = PLAYERS_INFO[peer_id]
+		
+		Connection.all_data[peer_id] = {
+			"name": player_info["name"],
+			"color": player_info["color"]
+		}
+	_change_client_to_arena.rpc()
+	var _val = get_tree().change_scene_to_file("res://arena/arena.tscn")
 
 
 ########################################### RPC METHODS ###########################################
@@ -132,16 +152,17 @@ func _update_info_in_client(players_info: Dictionary) -> void:
 	_update_local_info()
 
 
+@rpc
+func _change_client_to_arena() -> void:
+	var _val = get_tree().change_scene_to_file("res://arena/arena.tscn")
+
 ########################################## BUTTON SIGNALS ##########################################
 
 func _on_start_pressed() -> void:
 	if multiplayer.is_server():
 		# On server, checks if all players are ready to proceed to the next gamestate
-		for player in %Players.get_children():
-			if not player.get_node("CheckBox").button_pressed:
-				print("Player " + player.get_node("PlayerName").text + " is not ready")
-				return
-		print("Everyone ready!")
+		if _all_ready():
+			_change_to_arena()
 	else:
 		# On client, sends a change in the 'readyness' status to the server
 		var peer_id: int = multiplayer.get_unique_id()

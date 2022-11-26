@@ -11,13 +11,16 @@ func _get_players_name():
 
 
 func _change_to_lobby():
-	var _val = get_tree().change_scene_to_file("res://lobby.tscn")
+	var _val = get_tree().change_scene_to_file("res://lobby/lobby.tscn")
 
 
 func _on_host_pressed():
 	# Hosts a new lobby session
-	Connection.start_server({"name": _get_players_name(), "color": %PlayerVisual.modulate})
-	_change_to_lobby()
+	var error = Connection.start_server({"name": _get_players_name(), "color": %PlayerVisual.modulate})
+	if error == 0:
+		_change_to_lobby()
+	else:
+		print("Server error: ", error)
 
 
 func _on_enter_pressed():
@@ -27,10 +30,11 @@ func _on_enter_pressed():
 		ip_text = 'localhost'
 	
 	if ip_text.is_valid_ip_address() or ip_text == 'localhost':
-		var Network = Connection.connect_to_server(
+		var Network: ENetMultiplayerPeer = Connection.connect_to_server(
 			ip_text,
 			{"name": _get_players_name(), "color": %PlayerVisual.modulate}
 		)
+		@warning_ignore(return_value_discarded)
 		Network.connect("connection_succeeded", _change_to_lobby)
 
 
