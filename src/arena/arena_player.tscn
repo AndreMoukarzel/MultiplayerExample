@@ -1,6 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://bnugotcteettw"]
+[gd_scene load_steps=8 format=3 uid="uid://c34jgetkcocad"]
 
-[ext_resource type="Script" path="res://arena/arena_player.gd" id="1_tsoqb"]
+[ext_resource type="Script" path="res://src/arena/arena_player.gd" id="1_tsoqb"]
 [ext_resource type="Texture2D" uid="uid://dan8wahejn7fr" path="res://icon.svg" id="1_vqiy0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sxexr"]
@@ -64,6 +64,7 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 20
 text = "Player Name"
+horizontal_alignment = 1
 metadata/_edit_lock_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]

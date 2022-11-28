@@ -1,3 +1,9 @@
+# Players are sent to this scene as "contestants" if they were connected in the lobby scene
+# beforehand and the server initiated the transition. Peers that connect after the scene is started
+# will be instanced as spectators and can watch other players but will not have a player scene
+#
+# This scene exemplifies the behavior of players who ARE their own multiplayer authorities, and
+# therefore all necessary information is synced by the MultiplayerSynchronizer nodes.
 extends Node2D
 
 
@@ -15,7 +21,8 @@ func _ready() -> void:
 		PLAYERS_INFO = Connection.all_data
 		
 		# Awaits for all players from lobby to be connected
-		await all_connected
+		if len(PLAYERS_INFO.keys()) > 1: # Waits only if there are more players than the host
+			await all_connected
 		
 		var i: int = 1
 		for player_id in PLAYERS_INFO.keys():
@@ -30,12 +37,13 @@ func _ready() -> void:
 		# Updates name and color of Players in clients' instances
 		_update_info_in_client.rpc(PLAYERS_INFO)
 		
+		_fadeout_arena_blackscreen.rpc()
+		
 		# Connects signals handling player creation/removal on client connection/disconnection
 #		@warning_ignore(return_value_discarded)
 #		multiplayer.multiplayer_peer.connect("peer_connected",
-#			_create_player
+#			_create_player_or_spectator
 #		)
-		@warning_ignore(return_value_discarded)
 		multiplayer.multiplayer_peer.connect("peer_disconnected",
 			_remove_player
 		)
@@ -51,11 +59,11 @@ func _ready() -> void:
 			else:
 				PlayerObj.UNLOCKED = true
 	else:
-		@warning_ignore(return_value_discarded)
 		rpc_id(1, "_confirm_connection", multiplayer.get_unique_id())
+		
+		multiplayer.connect("server_disconnected", _change_to_menu)
 	
-	@warning_ignore(return_value_discarded)
-	multiplayer.multiplayer_peer.connect("server_disconnected", _change_to_menu)
+	_on_chat_box_inactive()
 
 
 ######################################### INTERNAL METHODS #########################################
@@ -126,4 +134,34 @@ func _confirm_connection(asking_peer: int) -> void:
 	for peer_id in PLAYERS_INFO.keys():
 		if peer_id not in CONNECTED_PLAYERS:
 			return
+	@warning_ignore(return_value_discarded)
 	emit_signal("all_connected")
+
+
+@rpc(call_local)
+func _fadeout_arena_blackscreen() -> void:
+	%FgAnim.play("fadeout")
+	%ChatBox.WRITER_NAME = PLAYERS_INFO[multiplayer.get_unique_id()]["name"]
+
+
+@rpc(any_peer)
+func _send_message(peer_name: String, message: String) -> void:
+	# Sends a message to all other players
+	%ChatBox.add_new_message(peer_name, message)
+
+########################################### CHAT SIGNALS ###########################################
+
+
+func _on_chat_box_active():
+	var twn = get_tree().create_tween()
+	twn.tween_property(%ChatBox, "modulate", Color(1, 1, 1, 1), .6)
+
+
+func _on_chat_box_inactive():
+	var twn = get_tree().create_tween()
+	twn.tween_property(%ChatBox, "modulate", Color(1, 1, 1, .6), .6)
+
+
+func _on_chat_box_text_submited(text):
+	var peer_name: String = PLAYERS_INFO[multiplayer.get_unique_id()]["name"]
+	_send_message.rpc(peer_name, text)

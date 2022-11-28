@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://t1bm7581b3mk"]
+[gd_scene load_steps=9 format=3 uid="uid://biaox5fhm3h58"]
 
-[ext_resource type="Script" path="res://arena/arena.gd" id="1_fs23s"]
-[ext_resource type="PackedScene" uid="uid://bnugotcteettw" path="res://arena/arena_player.tscn" id="1_ox585"]
+[ext_resource type="Script" path="res://src/arena/arena.gd" id="1_1k17a"]
+[ext_resource type="PackedScene" uid="uid://c34jgetkcocad" path="res://src/arena/arena_player.tscn" id="2_ekwxo"]
+[ext_resource type="PackedScene" uid="uid://bisqiyqe7sxcg" path="res://src/chatbox/chat_box.tscn" id="3_nhtpb"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_66lii"]
 size = Vector2(40, 648)
@@ -23,10 +24,21 @@ tracks/0/keys = {
 "update": 0,
 "values": [Color(0, 0, 0, 1)]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../InfoBox/InfoLabel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
 
 [sub_resource type="Animation" id="Animation_sj5tp"]
 resource_name = "fadeout"
-length = 0.5
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -34,10 +46,22 @@ tracks/0/path = NodePath(".:color")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.5),
+"times": PackedFloat32Array(0.5, 1),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../InfoBox/InfoLabel:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.5, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_t7cbw"]
@@ -47,8 +71,8 @@ _data = {
 }
 
 [node name="Arena" type="Node2D"]
-script = ExtResource("1_fs23s")
-PLAYER_SCN = ExtResource("1_ox585")
+script = ExtResource("1_1k17a")
+PLAYER_SCN = ExtResource("2_ekwxo")
 
 [node name="Walls" type="Node2D" parent="."]
 metadata/_edit_lock_ = true
@@ -160,6 +184,11 @@ unique_name_in_owner = true
 
 [node name="Foreground" type="CanvasLayer" parent="."]
 
+[node name="ChatBox" parent="Foreground" instance=ExtResource("3_nhtpb")]
+unique_name_in_owner = true
+offset_left = 0.0
+offset_bottom = 0.0
+
 [node name="Black" type="ColorRect" parent="Foreground"]
 anchors_preset = 15
 anchor_right = 1.0
@@ -168,15 +197,42 @@ offset_right = 2000.0
 offset_bottom = 1000.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Foreground/Black"]
-autoplay = "fadeout"
+[node name="InfoBox" type="BoxContainer" parent="Foreground"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="InfoLabel" type="Label" parent="Foreground/InfoBox"]
+unique_name_in_owner = true
+layout_mode = 2
+offset_left = 132.0
+offset_top = 284.0
+offset_right = 1019.0
+offset_bottom = 364.0
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 56
+text = "Awaiting for players to connect..."
+horizontal_alignment = 1
+
+[node name="FgAnim" type="AnimationPlayer" parent="Foreground"]
+unique_name_in_owner = true
+root_node = NodePath("../Black")
 libraries = {
 "": SubResource("AnimationLibrary_t7cbw")
 }
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://arena/arena_player.tscn")
+_spawnable_scenes = PackedStringArray("res://src/arena/arena_player.tscn")
 spawn_path = NodePath("../Players")
 spawn_limit = 4
+
+[connection signal="active" from="Foreground/ChatBox" to="." method="_on_chat_box_active"]
+[connection signal="inactive" from="Foreground/ChatBox" to="." method="_on_chat_box_inactive"]
+[connection signal="text_submited" from="Foreground/ChatBox" to="." method="_on_chat_box_text_submited"]

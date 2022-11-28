@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cblf0yfaud4ho"]
+[gd_scene load_steps=4 format=3 uid="uid://dkrlx3j12q5ti"]
 
-[ext_resource type="Script" path="res://lobby/lobby.gd" id="1_y0r53"]
-[ext_resource type="PackedScene" uid="uid://p8b536pyrqlw" path="res://lobby/lobby_player.tscn" id="2_t2w0m"]
+[ext_resource type="Script" path="res://src/lobby/lobby.gd" id="1_y0r53"]
+[ext_resource type="PackedScene" uid="uid://biaox5fhm3h58" path="res://src/arena/arena.tscn" id="2_d441n"]
+[ext_resource type="PackedScene" uid="uid://p8b536pyrqlw" path="res://src/lobby/lobby_player.tscn" id="2_t2w0m"]
 
 [node name="Lobby" type="VSplitContainer"]
 anchors_preset = 15
@@ -13,10 +14,12 @@ theme_override_constants/separation = 20
 split_offset = 20
 dragger_visibility = 2
 script = ExtResource("1_y0r53")
+ARENA_SCN = ExtResource("2_d441n")
 PLAYER_SCN = ExtResource("2_t2w0m")
 
 [node name="Players" type="HBoxContainer" parent="."]
 unique_name_in_owner = true
+layout_mode = 2
 offset_top = 75.0
 offset_right = 1152.0
 offset_bottom = 268.0
@@ -26,6 +29,7 @@ theme_override_constants/separation = 120
 alignment = 1
 
 [node name="Player" parent="Players" instance=ExtResource("2_t2w0m")]
+layout_mode = 2
 anchors_preset = 0
 anchor_left = 0.0
 anchor_top = 0.0
@@ -39,6 +43,7 @@ grow_horizontal = 1
 grow_vertical = 1
 
 [node name="Player2" parent="Players" instance=ExtResource("2_t2w0m")]
+layout_mode = 2
 anchors_preset = 0
 anchor_left = 0.0
 anchor_top = 0.0
@@ -52,6 +57,7 @@ grow_horizontal = 1
 grow_vertical = 1
 
 [node name="Player3" parent="Players" instance=ExtResource("2_t2w0m")]
+layout_mode = 2
 anchors_preset = 0
 anchor_left = 0.0
 anchor_top = 0.0
@@ -65,6 +71,7 @@ grow_horizontal = 1
 grow_vertical = 1
 
 [node name="Player4" parent="Players" instance=ExtResource("2_t2w0m")]
+layout_mode = 2
 anchors_preset = 0
 anchor_left = 0.0
 anchor_top = 0.0
@@ -78,6 +85,7 @@ grow_horizontal = 1
 grow_vertical = 1
 
 [node name="InfoAndButtons" type="VBoxContainer" parent="."]
+layout_mode = 2
 offset_top = 443.0
 offset_right = 1152.0
 offset_bottom = 549.0
@@ -87,6 +95,7 @@ alignment = 1
 
 [node name="Info" type="Label" parent="InfoAndButtons"]
 unique_name_in_owner = true
+layout_mode = 2
 offset_right = 1152.0
 offset_bottom = 31.0
 theme_override_font_sizes/font_size = 20
@@ -94,6 +103,7 @@ text = "Example information text here"
 horizontal_alignment = 1
 
 [node name="Buttons" type="HBoxContainer" parent="InfoAndButtons"]
+layout_mode = 2
 offset_top = 46.0
 offset_right = 1152.0
 offset_bottom = 106.0
@@ -104,6 +114,7 @@ alignment = 1
 [node name="Start" type="Button" parent="InfoAndButtons/Buttons"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 60)
+layout_mode = 2
 offset_left = 276.0
 offset_right = 476.0
 offset_bottom = 60.0
@@ -112,6 +123,7 @@ text = "Start"
 
 [node name="Quit" type="Button" parent="InfoAndButtons/Buttons"]
 custom_minimum_size = Vector2(200, 60)
+layout_mode = 2
 offset_left = 676.0
 offset_right = 876.0
 offset_bottom = 60.0
@@ -119,7 +131,7 @@ theme_override_font_sizes/font_size = 20
 text = "Quit"
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
-_spawnable_scenes = PackedStringArray("res://lobby/lobby_player.tscn")
+_spawnable_scenes = PackedStringArray("res://src/lobby/lobby_player.tscn")
 spawn_path = NodePath("../Players")
 spawn_limit = 4
 

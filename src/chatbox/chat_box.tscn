@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=3 uid="uid://bisqiyqe7sxcg"]
+
+[ext_resource type="Script" path="res://src/chatbox/chat_box.gd" id="1_v8e8w"]
+
+[node name="ChatBox" type="Control"]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_bottom = -3.0
+grow_vertical = 0
+script = ExtResource("1_v8e8w")
+metadata/_edit_group_ = true
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -400.0
+offset_right = 300.0
+offset_bottom = -31.0
+grow_vertical = 0
+metadata/_edit_lock_ = true
+
+[node name="MessageHistory" type="RichTextLabel" parent="Background"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 2.0
+offset_right = 299.0
+offset_bottom = 368.0
+bbcode_enabled = true
+scroll_following = true
+metadata/_edit_lock_ = true
+
+[node name="CurrentMessage" type="LineEdit" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+offset_right = 300.0
+grow_vertical = 0
+placeholder_text = "Write Here"
+max_length = 256
+metadata/_edit_lock_ = true
+
+[node name="InactivityTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[connection signal="mouse_entered" from="Background/MessageHistory" to="." method="_on_message_history_mouse_entered"]
+[connection signal="mouse_entered" from="CurrentMessage" to="." method="_on_current_message_mouse_entered"]
+[connection signal="text_submitted" from="CurrentMessage" to="." method="_on_current_message_text_submitted"]
+[connection signal="timeout" from="InactivityTimer" to="." method="_on_inactivity_timer_timeout"]

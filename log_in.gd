@@ -11,7 +11,7 @@ func _get_players_name():
 
 
 func _change_to_lobby():
-	var _val = get_tree().change_scene_to_file("res://lobby/lobby.tscn")
+	var _val = get_tree().change_scene_to_file("res://src/lobby/lobby.tscn")
 
 
 func _on_host_pressed():
@@ -21,6 +21,7 @@ func _on_host_pressed():
 		_change_to_lobby()
 	else:
 		print("Server error: ", error)
+		Connection.shutdown_server()
 
 
 func _on_enter_pressed():
@@ -30,12 +31,16 @@ func _on_enter_pressed():
 		ip_text = 'localhost'
 	
 	if ip_text.is_valid_ip_address() or ip_text == 'localhost':
-		var Network: ENetMultiplayerPeer = Connection.connect_to_server(
+		var error: int = Connection.connect_to_server(
 			ip_text,
 			{"name": _get_players_name(), "color": %PlayerVisual.modulate}
 		)
-		@warning_ignore(return_value_discarded)
-		Network.connect("connection_succeeded", _change_to_lobby)
+		if error == 0:
+			await multiplayer.connected_to_server
+			_change_to_lobby()
+		else:
+			print("Client error: ", error)
+			Connection.disconnect_from_server()
 
 
 func _on_quit_pressed():

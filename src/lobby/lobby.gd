@@ -2,12 +2,16 @@
 # Players can connect to lobby with custumized information (player's name) and have to confirm
 # readyness to server before all can proceed to the next game-state
 #
+# This scene exemplifies the behavior of players who are not their own multiplayer authorities, and
+# therefore send all necessary information to server for synchronization
+#
 # Since the syncronization of the LobbyPlayer scenes is handled with MultiplayerSpawner, all we
 # need to do is make sure the LobbyPlayer scenes are correctly instanced in the server instance
 # and they will be automatically synchronized in all clients, greatly simplifying the process.
 extends VSplitContainer
 
 
+@export var ARENA_SCN: PackedScene
 @export var PLAYER_SCN: PackedScene
 
 var PLAYERS_INFO: Dictionary = {}
@@ -29,21 +33,17 @@ func _ready() -> void:
 		_setup_server_player(%Players.get_node(str(this_peer_id)))
 		
 		# Connects signals handling player creation/removal on client connection/disconnection
-		@warning_ignore(return_value_discarded)
 		multiplayer.multiplayer_peer.connect("peer_connected",
 			_create_player
 		)
-		@warning_ignore(return_value_discarded)
 		multiplayer.multiplayer_peer.connect("peer_disconnected",
 			_remove_player
 		)
 	else:
 		%Start.text = "Ready" # 'Start' button is used to confirm readyness in clients, hence the text change
-		@warning_ignore(return_value_discarded)
 		rpc_id(1, "_send_info_to_server", multiplayer.get_unique_id(), Connection.self_data, false)
-	
-	@warning_ignore(return_value_discarded)
-	multiplayer.multiplayer_peer.connect("server_disconnected", _change_to_menu)
+		
+		multiplayer.connect("server_disconnected", _change_to_menu)
 
 
 ######################################### INTERNAL METHODS #########################################
@@ -125,7 +125,7 @@ func _change_to_arena() -> void:
 			"color": player_info["color"]
 		}
 	_change_client_to_arena.rpc()
-	var _val = get_tree().change_scene_to_file("res://arena/arena.tscn")
+	var _val = get_tree().change_scene_to_packed(ARENA_SCN)
 
 
 ########################################### RPC METHODS ###########################################
@@ -154,7 +154,7 @@ func _update_info_in_client(players_info: Dictionary) -> void:
 
 @rpc
 func _change_client_to_arena() -> void:
-	var _val = get_tree().change_scene_to_file("res://arena/arena.tscn")
+	var _val = get_tree().change_scene_to_packed(ARENA_SCN)
 
 ########################################## BUTTON SIGNALS ##########################################
 

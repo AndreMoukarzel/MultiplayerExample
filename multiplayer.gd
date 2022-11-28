@@ -17,32 +17,27 @@ func start_server(player_data: Dictionary) -> int:
 	if error == 0: # No error
 		multiplayer.multiplayer_peer = NETWORK
 		
-		@warning_ignore(return_value_discarded)
 		NETWORK.connect("peer_connected", _peer_connected)
-		@warning_ignore(return_value_discarded)
 		NETWORK.connect("peer_disconnected", _peer_disconnected)
 		
 #		_setup_upnp()
 	return error
 
 
-func connect_to_server(address: String, player_data: Dictionary) -> ENetMultiplayerPeer:
+func connect_to_server(address: String, player_data: Dictionary) -> int:
 	self_data = player_data
-	@warning_ignore(return_value_discarded)
-	NETWORK.create_client(address, PORT)
+	var error = NETWORK.create_client(address, PORT)
 	multiplayer.multiplayer_peer = NETWORK
 	
-	@warning_ignore(return_value_discarded)
-	NETWORK.connect("connection_failed", _on_connection_failed)
-	@warning_ignore(return_value_discarded)
-	NETWORK.connect("connection_succeeded", _on_connection_succeeded)
+	multiplayer.connect("connection_failed", _on_connection_failed)
+	multiplayer.connect("connected_to_server", _on_connection_succeeded)
 	
-	return NETWORK
+	return error
 
 
 func shutdown_server():
 	is_host = false
-	multiplayer.multiplayer_peer.close_connection()
+	multiplayer.multiplayer_peer.close()
 	multiplayer.multiplayer_peer = null
 	
 	NETWORK.disconnect("peer_connected", _peer_connected)
@@ -50,16 +45,14 @@ func shutdown_server():
 	
 	NETWORK = ENetMultiplayerPeer.new()
 	
-	@warning_ignore(return_value_discarded)
-	PLUG_AND_PLAY.delete_port_mapping(PORT, "UDP")
-	@warning_ignore(return_value_discarded)
-	PLUG_AND_PLAY.delete_port_mapping(PORT, "TCP")
-	
-	PLUG_AND_PLAY = UPNP.new()
+#	PLUG_AND_PLAY.delete_port_mapping(PORT, "UDP")
+#	PLUG_AND_PLAY.delete_port_mapping(PORT, "TCP")
+#
+#	PLUG_AND_PLAY = UPNP.new()
 
 
 func disconnect_from_server():
-	multiplayer.multiplayer_peer.close_connection()
+	multiplayer.multiplayer_peer.close()
 	multiplayer.multiplayer_peer = null
 	
 	NETWORK.disconnect("connection_failed", _on_connection_failed)
@@ -102,8 +95,6 @@ func _robust_port_mapping(upnp: UPNP, port: int, description: String) -> void:
 	var result_tcp = upnp.add_port_mapping(port, port, description + "_tcp", "TCP")
 	
 	if not result_udp == UPNP.UPNP_RESULT_SUCCESS:
-		@warning_ignore(return_value_discarded)
 		upnp.add_port_mapping(port, port, '', "UDP")
 	if not result_tcp == UPNP.UPNP_RESULT_SUCCESS:
-		@warning_ignore(return_value_discarded)
 		upnp.add_port_mapping(port, port, '', "TCP")
