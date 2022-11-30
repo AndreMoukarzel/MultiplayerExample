@@ -10,8 +10,8 @@ config_version=5
 
 [application]
 
-config/name="NetworkTest"
-run/main_scene="res://log_in.tscn"
+config/name="Multiplayer Example"
+run/main_scene="res://src/login/log_in.tscn"
 config/features=PackedStringArray("4.0", "Forward Plus")
 config/icon="res://icon.svg"
 

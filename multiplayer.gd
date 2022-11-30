@@ -71,6 +71,7 @@ func _peer_disconnected(player_id):
 
 func _on_connection_failed():
 	print("Connection Failed")
+	disconnect_from_server()
 
 
 func _on_connection_succeeded():

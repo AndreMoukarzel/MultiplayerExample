@@ -181,4 +181,4 @@ func _on_quit_pressed() -> void:
 	else:
 		# The player's scene removal will be handed by the server using the 'peer_disconnected' signal
 		Connection.disconnect_from_server()
-	var _val = get_tree().change_scene_to_file("res://log_in.tscn")
+	var _val = get_tree().change_scene_to_file("res://src/login/log_in.tscn")

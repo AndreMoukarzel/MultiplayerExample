@@ -1,8 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bnfg4u7xpux4f"]
+[gd_scene load_steps=4 format=3 uid="uid://ssoq5bj86141"]
 
-[ext_resource type="Script" path="res://log_in.gd" id="1_d72sq"]
-[ext_resource type="Script" path="res://IpText.gd" id="1_or702"]
-[ext_resource type="Texture2D" uid="uid://dan8wahejn7fr" path="res://icon.svg" id="3_ywlbn"]
+[ext_resource type="Script" path="res://src/login/log_in.gd" id="1_ir45v"]
+[ext_resource type="Texture2D" uid="uid://dan8wahejn7fr" path="res://icon.svg" id="2_n05ia"]
+[ext_resource type="Script" path="res://src/login/IpText.gd" id="3_rww1i"]
 
 [node name="LogIn" type="HBoxContainer"]
 anchors_preset = 15
@@ -12,10 +12,11 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 150
 alignment = 1
-script = ExtResource("1_d72sq")
+script = ExtResource("1_ir45v")
 metadata/_edit_lock_ = true
 
 [node name="Customization" type="VBoxContainer" parent="."]
+layout_mode = 2
 offset_left = 271.0
 offset_right = 471.0
 offset_bottom = 648.0
@@ -24,11 +25,13 @@ alignment = 1
 metadata/_edit_lock_ = true
 
 [node name="PlayerName" type="VBoxContainer" parent="Customization"]
+layout_mode = 2
 offset_top = 187.0
 offset_right = 200.0
 offset_bottom = 252.0
 
 [node name="Label" type="Label" parent="Customization/PlayerName"]
+layout_mode = 2
 offset_right = 200.0
 offset_bottom = 26.0
 text = "Player's Name"
@@ -37,6 +40,7 @@ horizontal_alignment = 1
 [node name="NameText" type="TextEdit" parent="Customization/PlayerName"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
 offset_top = 30.0
 offset_right = 200.0
 offset_bottom = 65.0
@@ -44,11 +48,13 @@ placeholder_text = "Default"
 scroll_fit_content_height = true
 
 [node name="PlayerColor" type="VBoxContainer" parent="Customization"]
+layout_mode = 2
 offset_top = 302.0
 offset_right = 200.0
 offset_bottom = 460.0
 
 [node name="Label" type="Label" parent="Customization/PlayerColor"]
+layout_mode = 2
 offset_right = 200.0
 offset_bottom = 26.0
 text = "Player Color"
@@ -56,6 +62,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Color" type="HBoxContainer" parent="Customization/PlayerColor"]
+layout_mode = 2
 offset_top = 30.0
 offset_right = 200.0
 offset_bottom = 158.0
@@ -63,6 +70,7 @@ theme_override_constants/separation = 15
 
 [node name="ColorPickerButton" type="ColorPickerButton" parent="Customization/PlayerColor/Color"]
 custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
 offset_right = 50.0
 offset_bottom = 128.0
 icon_alignment = 1
@@ -70,13 +78,15 @@ color = Color(1, 1, 1, 1)
 
 [node name="PlayerVisual" type="TextureRect" parent="Customization/PlayerColor/Color"]
 unique_name_in_owner = true
+layout_mode = 2
 offset_left = 65.0
 offset_right = 193.0
 offset_bottom = 128.0
-texture = ExtResource("3_ywlbn")
+texture = ExtResource("2_n05ia")
 
 [node name="Connection" type="VBoxContainer" parent="."]
 custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
 offset_left = 621.0
 offset_right = 881.0
 offset_bottom = 648.0
@@ -85,23 +95,27 @@ alignment = 1
 metadata/_edit_lock_ = true
 
 [node name="Host" type="Button" parent="Connection"]
+layout_mode = 2
 offset_top = 210.0
 offset_right = 260.0
 offset_bottom = 241.0
 text = "Host"
 
 [node name="Connect" type="VBoxContainer" parent="Connection"]
+layout_mode = 2
 offset_top = 291.0
 offset_right = 260.0
 offset_bottom = 356.0
 
 [node name="Label" type="Label" parent="Connection/Connect"]
+layout_mode = 2
 offset_right = 260.0
 offset_bottom = 26.0
 text = "Connect to Server"
 horizontal_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Connection/Connect"]
+layout_mode = 2
 offset_top = 30.0
 offset_right = 260.0
 offset_bottom = 65.0
@@ -110,19 +124,22 @@ theme_override_constants/separation = 10
 [node name="IpText" type="TextEdit" parent="Connection/Connect/HBoxContainer"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
 offset_right = 200.0
 offset_bottom = 35.0
 placeholder_text = "127.0.0.1"
 scroll_fit_content_height = true
-script = ExtResource("1_or702")
+script = ExtResource("3_rww1i")
 
 [node name="Enter" type="Button" parent="Connection/Connect/HBoxContainer"]
+layout_mode = 2
 offset_left = 210.0
 offset_right = 260.0
 offset_bottom = 35.0
 text = "Enter"
 
 [node name="Quit" type="Button" parent="Connection"]
+layout_mode = 2
 offset_top = 406.0
 offset_right = 260.0
 offset_bottom = 437.0
