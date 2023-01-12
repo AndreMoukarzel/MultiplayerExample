@@ -3,6 +3,11 @@
 extends HBoxContainer
 
 
+func _ready():
+	%Warning.text = ""
+	%LoadingIcon.hide()
+
+
 func _get_players_name():
 	var player_name: String = %NameText.text
 	if player_name == "":
@@ -24,6 +29,13 @@ func _on_host_pressed():
 		Connection.shutdown_server()
 
 
+func _on_connection_failed():
+	%LoadingIcon.hide()
+	$Connection/Connect/HBoxContainer/Enter.show()
+	%Warning.text = "Connection to " + %IpText.text + " failed!"
+	%IpText.text = ""
+
+
 func _on_enter_pressed():
 	# Checks if a valid IP address is inputed, and if true tries to connect to it
 	var ip_text: String = %IpText.text
@@ -35,9 +47,13 @@ func _on_enter_pressed():
 			ip_text,
 			{"name": _get_players_name(), "color": %PlayerVisual.modulate}
 		)
+		print(error)
 		if error == 0:
-			await multiplayer.connected_to_server
-			_change_to_lobby()
+			%LoadingIcon.show()
+			$Connection/Connect/HBoxContainer/Enter.hide()
+			
+			multiplayer.connect("connection_failed", _on_connection_failed)
+			multiplayer.connect("connected_to_server", _change_to_lobby)
 		else:
 			print("Client error: ", error)
 			Connection.disconnect_from_server()
