@@ -18,18 +18,23 @@ func add_new_message(author: String, message: String, color: Color=Color(1, 1, 1
 
 
 func _on_current_message_text_submitted(new_text):
+	if len(new_text.strip_escapes()) == 0: # Doesn't allow submission of empty messages
+		return
 	add_new_message(WRITER_NAME, new_text, WRITER_COLOR)
 	$CurrentMessage.text = ""
 	emit_signal("active")
 	emit_signal("text_submited", new_text)
+	$InactivityTimer.start()
 
 
 func _on_message_history_mouse_entered():
 	emit_signal("active")
+	$InactivityTimer.start()
 
 
 func _on_current_message_mouse_entered():
 	emit_signal("active")
+	$InactivityTimer.start()
 
 
 func _on_inactivity_timer_timeout():
